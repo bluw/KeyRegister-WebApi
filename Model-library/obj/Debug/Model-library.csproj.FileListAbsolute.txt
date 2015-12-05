@@ -1,0 +1,4 @@
+C:\Users\admin\Documents\Visual Studio 2015\Projects\KeyRegister-WebApi\Model-library\bin\Debug\Model-library.dll
+C:\Users\admin\Documents\Visual Studio 2015\Projects\KeyRegister-WebApi\Model-library\bin\Debug\Model-library.pdb
+C:\Users\admin\Documents\Visual Studio 2015\Projects\KeyRegister-WebApi\Model-library\obj\Debug\Model-library.dll
+C:\Users\admin\Documents\Visual Studio 2015\Projects\KeyRegister-WebApi\Model-library\obj\Debug\Model-library.pdb

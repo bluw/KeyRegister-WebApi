@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="keyregisterdbModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="algorithm">
+    <Key>
+      <PropertyRef Name="idAlgorithm" />
+    </Key>
+    <Property Name="idAlgorithm" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="type" Type="varchar" MaxLength="45" Nullable="false" />
+  </EntityType>
+  <EntityType Name="company">
+    <Key>
+      <PropertyRef Name="idCompany" />
+    </Key>
+    <Property Name="idCompany" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="nameCompany" Type="varchar" MaxLength="45" Nullable="false" />
+  </EntityType>
+  <EntityType Name="favorite">
+    <Key>
+      <PropertyRef Name="idFavorite" />
+    </Key>
+    <Property Name="idFavorite" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="personWithFavorite" Type="varchar" MaxLength="45" Nullable="false" />
+    <Property Name="personFavorite" Type="varchar" MaxLength="45" Nullable="false" />
+  </EntityType>
+  <EntityType Name="person">
+    <Key>
+      <PropertyRef Name="email" />
+    </Key>
+    <Property Name="email" Type="varchar" MaxLength="45" Nullable="false" />
+    <Property Name="password" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="firstName" Type="varchar" MaxLength="45" Nullable="false" />
+    <Property Name="lastName" Type="varchar" MaxLength="45" Nullable="false" />
+    <Property Name="keyUsed" Type="varchar" MaxLength="45" Nullable="false" />
+    <Property Name="keyLength" Type="int" Nullable="false" />
+    <Property Name="FK_company" Type="int" Nullable="false" />
+    <Property Name="FK_algorithm" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_algorithm">
+    <End Role="algorithm" Type="Self.algorithm" Multiplicity="1" />
+    <End Role="person" Type="Self.person" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="algorithm">
+        <PropertyRef Name="idAlgorithm" />
+      </Principal>
+      <Dependent Role="person">
+        <PropertyRef Name="FK_algorithm" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_company">
+    <End Role="company" Type="Self.company" Multiplicity="1" />
+    <End Role="person" Type="Self.person" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="company">
+        <PropertyRef Name="idCompany" />
+      </Principal>
+      <Dependent Role="person">
+        <PropertyRef Name="FK_company" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="personFavorite">
+    <End Role="person" Type="Self.person" Multiplicity="1" />
+    <End Role="favorite" Type="Self.favorite" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="person">
+        <PropertyRef Name="email" />
+      </Principal>
+      <Dependent Role="favorite">
+        <PropertyRef Name="personFavorite" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="PersonWithFavorite">
+    <End Role="person" Type="Self.person" Multiplicity="1" />
+    <End Role="favorite" Type="Self.favorite" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="person">
+        <PropertyRef Name="email" />
+      </Principal>
+      <Dependent Role="favorite">
+        <PropertyRef Name="personWithFavorite" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="keyregisterdbModelStoreContainer">
+    <EntitySet Name="algorithm" EntityType="Self.algorithm" Schema="keyregisterdb" store:Type="Tables" />
+    <EntitySet Name="company" EntityType="Self.company" Schema="keyregisterdb" store:Type="Tables" />
+    <EntitySet Name="favorite" EntityType="Self.favorite" Schema="keyregisterdb" store:Type="Tables" />
+    <EntitySet Name="person" EntityType="Self.person" Schema="keyregisterdb" store:Type="Tables" />
+    <AssociationSet Name="FK_algorithm" Association="Self.FK_algorithm">
+      <End Role="algorithm" EntitySet="algorithm" />
+      <End Role="person" EntitySet="person" />
+    </AssociationSet>
+    <AssociationSet Name="FK_company" Association="Self.FK_company">
+      <End Role="company" EntitySet="company" />
+      <End Role="person" EntitySet="person" />
+    </AssociationSet>
+    <AssociationSet Name="personFavorite" Association="Self.personFavorite">
+      <End Role="person" EntitySet="person" />
+      <End Role="favorite" EntitySet="favorite" />
+    </AssociationSet>
+    <AssociationSet Name="PersonWithFavorite" Association="Self.PersonWithFavorite">
+      <End Role="person" EntitySet="person" />
+      <End Role="favorite" EntitySet="favorite" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

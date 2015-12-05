@@ -1,0 +1,299 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="keyregisterdbModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="algorithm">
+          <Key>
+            <PropertyRef Name="idAlgorithm" />
+          </Key>
+          <Property Name="idAlgorithm" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="type" Type="varchar" MaxLength="45" Nullable="false" />
+        </EntityType>
+        <EntityType Name="company">
+          <Key>
+            <PropertyRef Name="idCompany" />
+          </Key>
+          <Property Name="idCompany" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="nameCompany" Type="varchar" MaxLength="45" Nullable="false" />
+        </EntityType>
+        <EntityType Name="favorite">
+          <Key>
+            <PropertyRef Name="idFavorite" />
+          </Key>
+          <Property Name="idFavorite" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="personWithFavorite" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="personFavorite" Type="varchar" MaxLength="45" Nullable="false" />
+        </EntityType>
+        <EntityType Name="person">
+          <Key>
+            <PropertyRef Name="email" />
+          </Key>
+          <Property Name="email" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="firstName" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="lastName" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="keyUsed" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="keyLength" Type="int" Nullable="false" />
+          <Property Name="FK_company" Type="int" Nullable="false" />
+          <Property Name="FK_algorithm" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_algorithm">
+          <End Role="algorithm" Type="Self.algorithm" Multiplicity="1" />
+          <End Role="person" Type="Self.person" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="algorithm">
+              <PropertyRef Name="idAlgorithm" />
+            </Principal>
+            <Dependent Role="person">
+              <PropertyRef Name="FK_algorithm" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_company">
+          <End Role="company" Type="Self.company" Multiplicity="1" />
+          <End Role="person" Type="Self.person" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="company">
+              <PropertyRef Name="idCompany" />
+            </Principal>
+            <Dependent Role="person">
+              <PropertyRef Name="FK_company" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="personFavorite">
+          <End Role="person" Type="Self.person" Multiplicity="1" />
+          <End Role="favorite" Type="Self.favorite" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="person">
+              <PropertyRef Name="email" />
+            </Principal>
+            <Dependent Role="favorite">
+              <PropertyRef Name="personFavorite" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PersonWithFavorite">
+          <End Role="person" Type="Self.person" Multiplicity="1" />
+          <End Role="favorite" Type="Self.favorite" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="person">
+              <PropertyRef Name="email" />
+            </Principal>
+            <Dependent Role="favorite">
+              <PropertyRef Name="personWithFavorite" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="keyregisterdbModelStoreContainer">
+          <EntitySet Name="algorithm" EntityType="Self.algorithm" Schema="keyregisterdb" store:Type="Tables" />
+          <EntitySet Name="company" EntityType="Self.company" Schema="keyregisterdb" store:Type="Tables" />
+          <EntitySet Name="favorite" EntityType="Self.favorite" Schema="keyregisterdb" store:Type="Tables" />
+          <EntitySet Name="person" EntityType="Self.person" Schema="keyregisterdb" store:Type="Tables" />
+          <AssociationSet Name="FK_algorithm" Association="Self.FK_algorithm">
+            <End Role="algorithm" EntitySet="algorithm" />
+            <End Role="person" EntitySet="person" />
+          </AssociationSet>
+          <AssociationSet Name="FK_company" Association="Self.FK_company">
+            <End Role="company" EntitySet="company" />
+            <End Role="person" EntitySet="person" />
+          </AssociationSet>
+          <AssociationSet Name="personFavorite" Association="Self.personFavorite">
+            <End Role="person" EntitySet="person" />
+            <End Role="favorite" EntitySet="favorite" />
+          </AssociationSet>
+          <AssociationSet Name="PersonWithFavorite" Association="Self.PersonWithFavorite">
+            <End Role="person" EntitySet="person" />
+            <End Role="favorite" EntitySet="favorite" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="keyregisterdbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="algorithm">
+          <Key>
+            <PropertyRef Name="idAlgorithm" />
+          </Key>
+          <Property Name="idAlgorithm" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="type" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="people" Relationship="Self.FK_algorithm" FromRole="algorithm" ToRole="person" />
+        </EntityType>
+        <EntityType Name="company">
+          <Key>
+            <PropertyRef Name="idCompany" />
+          </Key>
+          <Property Name="idCompany" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="nameCompany" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="people" Relationship="Self.FK_company" FromRole="company" ToRole="person" />
+        </EntityType>
+        <EntityType Name="favorite">
+          <Key>
+            <PropertyRef Name="idFavorite" />
+          </Key>
+          <Property Name="idFavorite" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="personWithFavorite" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="personFavorite" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="person" Relationship="Self.personFavorite" FromRole="favorite" ToRole="person" />
+          <NavigationProperty Name="person1" Relationship="Self.PersonWithFavorite" FromRole="favorite" ToRole="person" />
+        </EntityType>
+        <EntityType Name="person">
+          <Key>
+            <PropertyRef Name="email" />
+          </Key>
+          <Property Name="email" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="firstName" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="lastName" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="keyUsed" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="keyLength" Type="Int32" Nullable="false" />
+          <Property Name="FK_company" Type="Int32" Nullable="false" />
+          <Property Name="FK_algorithm" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="algorithm" Relationship="Self.FK_algorithm" FromRole="person" ToRole="algorithm" />
+          <NavigationProperty Name="company" Relationship="Self.FK_company" FromRole="person" ToRole="company" />
+          <NavigationProperty Name="favorites" Relationship="Self.personFavorite" FromRole="person" ToRole="favorite" />
+          <NavigationProperty Name="favorites1" Relationship="Self.PersonWithFavorite" FromRole="person" ToRole="favorite" />
+        </EntityType>
+        <Association Name="FK_algorithm">
+          <End Role="algorithm" Type="Self.algorithm" Multiplicity="1" />
+          <End Role="person" Type="Self.person" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="algorithm">
+              <PropertyRef Name="idAlgorithm" />
+            </Principal>
+            <Dependent Role="person">
+              <PropertyRef Name="FK_algorithm" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_company">
+          <End Role="company" Type="Self.company" Multiplicity="1" />
+          <End Role="person" Type="Self.person" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="company">
+              <PropertyRef Name="idCompany" />
+            </Principal>
+            <Dependent Role="person">
+              <PropertyRef Name="FK_company" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="personFavorite">
+          <End Role="person" Type="Self.person" Multiplicity="1" />
+          <End Role="favorite" Type="Self.favorite" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="person">
+              <PropertyRef Name="email" />
+            </Principal>
+            <Dependent Role="favorite">
+              <PropertyRef Name="personFavorite" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PersonWithFavorite">
+          <End Role="person" Type="Self.person" Multiplicity="1" />
+          <End Role="favorite" Type="Self.favorite" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="person">
+              <PropertyRef Name="email" />
+            </Principal>
+            <Dependent Role="favorite">
+              <PropertyRef Name="personWithFavorite" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="KeyRegisterEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="algorithms" EntityType="Self.algorithm" />
+          <EntitySet Name="companies" EntityType="Self.company" />
+          <EntitySet Name="favorites" EntityType="Self.favorite" />
+          <EntitySet Name="people" EntityType="Self.person" />
+          <AssociationSet Name="FK_algorithm" Association="Self.FK_algorithm">
+            <End Role="algorithm" EntitySet="algorithms" />
+            <End Role="person" EntitySet="people" />
+          </AssociationSet>
+          <AssociationSet Name="FK_company" Association="Self.FK_company">
+            <End Role="company" EntitySet="companies" />
+            <End Role="person" EntitySet="people" />
+          </AssociationSet>
+          <AssociationSet Name="personFavorite" Association="Self.personFavorite">
+            <End Role="person" EntitySet="people" />
+            <End Role="favorite" EntitySet="favorites" />
+          </AssociationSet>
+          <AssociationSet Name="PersonWithFavorite" Association="Self.PersonWithFavorite">
+            <End Role="person" EntitySet="people" />
+            <End Role="favorite" EntitySet="favorites" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="keyregisterdbModelStoreContainer" CdmEntityContainer="KeyRegisterEntities">
+          <EntitySetMapping Name="algorithms">
+            <EntityTypeMapping TypeName="keyregisterdbModel.algorithm">
+              <MappingFragment StoreEntitySet="algorithm">
+                <ScalarProperty Name="idAlgorithm" ColumnName="idAlgorithm" />
+                <ScalarProperty Name="type" ColumnName="type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="companies">
+            <EntityTypeMapping TypeName="keyregisterdbModel.company">
+              <MappingFragment StoreEntitySet="company">
+                <ScalarProperty Name="idCompany" ColumnName="idCompany" />
+                <ScalarProperty Name="nameCompany" ColumnName="nameCompany" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="favorites">
+            <EntityTypeMapping TypeName="keyregisterdbModel.favorite">
+              <MappingFragment StoreEntitySet="favorite">
+                <ScalarProperty Name="idFavorite" ColumnName="idFavorite" />
+                <ScalarProperty Name="personWithFavorite" ColumnName="personWithFavorite" />
+                <ScalarProperty Name="personFavorite" ColumnName="personFavorite" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="people">
+            <EntityTypeMapping TypeName="keyregisterdbModel.person">
+              <MappingFragment StoreEntitySet="person">
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="firstName" ColumnName="firstName" />
+                <ScalarProperty Name="lastName" ColumnName="lastName" />
+                <ScalarProperty Name="keyUsed" ColumnName="keyUsed" />
+                <ScalarProperty Name="keyLength" ColumnName="keyLength" />
+                <ScalarProperty Name="FK_company" ColumnName="FK_company" />
+                <ScalarProperty Name="FK_algorithm" ColumnName="FK_algorithm" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
