@@ -126,11 +126,13 @@ namespace KeyRegister_WebApi.Controllers
             person.firstName = p.firstName;
             person.keyUsed = p.keyUsed;
             person.keyLength = p.keyLength;
-            int idCompany = searchCompany(p.company.nameCompany); //in case he changed company, need to check if it exists or not
-            person.company.idCompany = idCompany;
-            person.company.nameCompany = p.company.nameCompany;
-            person.typeAlgo.idAlgorithm = p.FK_algorithm;
-            person.typeAlgo.type = p.algorithm.type;
+            
+            /* problem accessing Person's Objects (ie: Person Company & Person Algorithm */
+           // int idCompany = searchCompany(p.company.nameCompany); //in case he changed company, need to check if it exists or not
+           // person.company.idCompany = idCompany;
+           // person.company.nameCompany = p.company.nameCompany;
+           // person.typeAlgo.idAlgorithm = p.FK_algorithm;
+           // person.typeAlgo.type = p.algorithm.type;
         }
 
         private void fillPersonToDatabase(person p, Person newPerson)
@@ -174,23 +176,6 @@ namespace KeyRegister_WebApi.Controllers
             db.SaveChanges();
             return db.companies.Count(); //meh . . . 
         }
-
-        private string getTypeAlgo(int idAlgo)
-        {
-            string typeAlgo;
-
-            algorithm query = (from a
-                               in db.algorithms
-                               where a.idAlgorithm == idAlgo
-                               select a).Single();
-
-            typeAlgo = query.type;
-
-            return typeAlgo;
-        }
-
-
-
 
         /*
         // GET: api/people

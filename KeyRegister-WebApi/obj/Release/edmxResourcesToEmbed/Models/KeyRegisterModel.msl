@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="keyregisterdbModelStoreContainer" CdmEntityContainer="KeyRegisterEntities">
+    <EntitySetMapping Name="algorithms">
+      <EntityTypeMapping TypeName="keyregisterdbModel.algorithm">
+        <MappingFragment StoreEntitySet="algorithm">
+          <ScalarProperty Name="idAlgorithm" ColumnName="idAlgorithm" />
+          <ScalarProperty Name="type" ColumnName="type" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="companies">
+      <EntityTypeMapping TypeName="keyregisterdbModel.company">
+        <MappingFragment StoreEntitySet="company">
+          <ScalarProperty Name="idCompany" ColumnName="idCompany" />
+          <ScalarProperty Name="nameCompany" ColumnName="nameCompany" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="favorites">
+      <EntityTypeMapping TypeName="keyregisterdbModel.favorite">
+        <MappingFragment StoreEntitySet="favorite">
+          <ScalarProperty Name="idFavorite" ColumnName="idFavorite" />
+          <ScalarProperty Name="personWithFavorite" ColumnName="personWithFavorite" />
+          <ScalarProperty Name="personFavorite" ColumnName="personFavorite" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="people">
+      <EntityTypeMapping TypeName="keyregisterdbModel.person">
+        <MappingFragment StoreEntitySet="person">
+          <ScalarProperty Name="email" ColumnName="email" />
+          <ScalarProperty Name="password" ColumnName="password" />
+          <ScalarProperty Name="firstName" ColumnName="firstName" />
+          <ScalarProperty Name="lastName" ColumnName="lastName" />
+          <ScalarProperty Name="keyUsed" ColumnName="keyUsed" />
+          <ScalarProperty Name="keyLength" ColumnName="keyLength" />
+          <ScalarProperty Name="FK_company" ColumnName="FK_company" />
+          <ScalarProperty Name="FK_algorithm" ColumnName="FK_algorithm" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

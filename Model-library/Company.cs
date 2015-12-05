@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Model_library
 {
-    [System.SerializableAttribute()]
+    [Serializable]
     public class Company
     {
         public int idCompany { get; set; }

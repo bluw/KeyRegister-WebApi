@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="IIS Web Application Name" description="" value="KeyRegister" tags="IisApp">
+    <parameterEntry kind="ProviderPath" scope="IisApp" match="^C:\\Users\\admin\\Documents\\Visual\ Studio\ 2015\\Projects\\KeyRegister-WebApi\\KeyRegister-WebApi\\obj\\Release\\Package\\PackageTmp$" />
+    <parameterEntry kind="ProviderPath" scope="setAcl" match="^C:\\Users\\admin\\Documents\\Visual\ Studio\ 2015\\Projects\\KeyRegister-WebApi\\KeyRegister-WebApi\\obj\\Release\\Package\\PackageTmp$" />
+  </parameter>
+  <parameter name="KeyRegisterEntities-Web.config Connection String" description="" value="metadata=res://*/Models.KeyRegisterModel.csdl|res://*/Models.KeyRegisterModel.ssdl|res://*/Models.KeyRegisterModel.msl;provider=MySql.Data.MySqlClient;provider connection string=&quot;server=eu-cdbr-azure-west-c.cloudapp.net;user id=b31efe984cab09;password=ed7e5bb6;persistsecurityinfo=True;database=keyregisterdb&quot;" tags="">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\admin\\Documents\\Visual\ Studio\ 2015\\Projects\\KeyRegister-WebApi\\KeyRegister-WebApi\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='KeyRegisterEntities']/@connectionString" />
+  </parameter>
+</parameters>

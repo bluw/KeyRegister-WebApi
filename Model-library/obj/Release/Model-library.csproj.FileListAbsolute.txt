@@ -1,0 +1,5 @@
+C:\Users\admin\Documents\Visual Studio 2015\Projects\KeyRegister-WebApi\Model-library\bin\Release\Model-library.dll
+C:\Users\admin\Documents\Visual Studio 2015\Projects\KeyRegister-WebApi\Model-library\bin\Release\Model-library.pdb
+C:\Users\admin\Documents\Visual Studio 2015\Projects\KeyRegister-WebApi\Model-library\obj\Release\Model-library.csprojResolveAssemblyReference.cache
+C:\Users\admin\Documents\Visual Studio 2015\Projects\KeyRegister-WebApi\Model-library\obj\Release\Model-library.dll
+C:\Users\admin\Documents\Visual Studio 2015\Projects\KeyRegister-WebApi\Model-library\obj\Release\Model-library.pdb

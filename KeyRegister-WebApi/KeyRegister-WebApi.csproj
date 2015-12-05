@@ -157,6 +157,8 @@
     <Content Include="Models\KeyRegisterModel.edmx.diagram">
       <DependentUpon>KeyRegisterModel.edmx</DependentUpon>
     </Content>
+    <None Include="Properties\PublishProfiles\keyRegisterWeb - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\keyRegisterWeb - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
