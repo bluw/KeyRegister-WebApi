@@ -8,7 +8,15 @@ namespace Model_library
 {
     public class Algorithm
     {
-        public int idAlgorithm { get; set; }
-        public string type { get; set; }
+        private int idAlgorithm;
+        public int IdAlgorithm { get; set; }
+
+        private string type;
+        public string Type { get; set; }
+
+        public Algorithm()
+        {
+
+        }
     }
 }

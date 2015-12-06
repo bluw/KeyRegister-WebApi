@@ -22,14 +22,14 @@ namespace KeyRegister_WebApi.Controllers
         { 
             List<Algorithm> list = new List<Algorithm>();
 
-            List<algorithm> algos = (from a
-                                     in db.algorithms
-                                     select a).ToList();
+            var algos = (from a
+                         in db.algorithms
+                         select a).ToList();
 
             foreach (var a in algos) {
                 Algorithm algo = new Algorithm();
-                algo.idAlgorithm = a.idAlgorithm;
-                algo.type = a.type;
+                algo.IdAlgorithm = a.idAlgorithm;
+                algo.Type = a.type;
                 list.Add(algo);
             }
 

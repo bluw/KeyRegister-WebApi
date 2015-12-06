@@ -8,7 +8,15 @@ namespace Model_library
 {
     public class Company
     {
-        public int idCompany { get; set; }
-        public string nameCompany { get; set; }
+        private int idCompany;
+        public int IdCompany { get; set; }
+
+        private string nameCompany;
+        public string NameCompany { get; set; }
+
+        public Company()
+        {
+
+        }
     }
 }

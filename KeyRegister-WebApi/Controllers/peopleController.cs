@@ -21,9 +21,8 @@ namespace KeyRegister_WebApi.Controllers
         public void updatePersonInDatabase(string email, string newPersonJSON)
         {
             Person newPerson = Newtonsoft.Json.JsonConvert.DeserializeObject<Person>(newPersonJSON);
-
-            // class starting with a lower character -> come from table name in database
-            person query = (from p
+            
+            var query = (from p
                             in db.people
                             where p.email == email
                             select p).Single();
@@ -38,7 +37,8 @@ namespace KeyRegister_WebApi.Controllers
         {
             Person newPerson = Newtonsoft.Json.JsonConvert.DeserializeObject<Person>(newPersonJSON);
 
-            person query = new person();
+                            // class starting with a lower character -> come from table name in database
+            var query = new person();
             fillPersonToDatabase(query, newPerson);
 
             db.people.Add(query);
@@ -50,12 +50,12 @@ namespace KeyRegister_WebApi.Controllers
         {
             List<Person> list = new List<Person>();
 
-            List<person> query = (from p
-                                  in db.people
-                                  where p.lastName == lastName
-                                  select p).ToList();
+            var query = (from p
+                         in db.people
+                         where p.lastName == lastName
+                         select p).ToList();
 
-            foreach (person p in query) {
+            foreach (var p in query) {
                 Person person = new Person();
                 fillPerson(person, p);
                 list.Add(person);
@@ -69,10 +69,10 @@ namespace KeyRegister_WebApi.Controllers
         {
             Person person = new Person();
 
-            person query = (from p
-                            in db.people
-                            where p.email == email
-                            select p).Single();
+            var query = (from p
+                         in db.people
+                         where p.email == email
+                         select p).Single();
 
             fillPerson(person, query);
 
@@ -85,12 +85,12 @@ namespace KeyRegister_WebApi.Controllers
             int idCompany = searchCompany(nameCompany);
             List<Person> list = new List<Person>();
 
-            List<person> query = (from p
-                                  in db.people
-                                  where p.FK_company == idCompany
-                                  select p).ToList();
+            var query = (from p
+                         in db.people
+                         where p.FK_company == idCompany
+                         select p).ToList();
 
-            foreach (person p in query) {
+            foreach (var p in query) {
                 Person person = new Person();
                 fillPerson(person, p);
                 list.Add(person);
@@ -104,13 +104,13 @@ namespace KeyRegister_WebApi.Controllers
         {
             List<Person> list = new List<Person>();
 
-            List<person> query = (from p in db.people
-                                  join f in db.favorites
-                                  on p.email equals f.personFavorite
-                                  where p.email == email
-                                  select p).ToList();
+            var query = (from p in db.people
+                         join f in db.favorites
+                         on p.email equals f.personFavorite
+                         where p.email == email
+                         select p).ToList();
 
-            foreach (person p in query) {
+            foreach (var p in query) {
                 Person person = new Person();
                 fillPerson(person, p);
                 list.Add(person);
@@ -121,30 +121,29 @@ namespace KeyRegister_WebApi.Controllers
 
         private void fillPerson(Person person, person p)
         {
-            person.email = p.email;
-            person.lastName = p.lastName;
-            person.firstName = p.firstName;
-            person.keyUsed = p.keyUsed;
-            person.keyLength = p.keyLength;
-            
-            /* problem accessing Person's Objects (ie: Person Company & Person Algorithm */
-           // int idCompany = searchCompany(p.company.nameCompany); //in case he changed company, need to check if it exists or not
-           // person.company.idCompany = idCompany;
-           // person.company.nameCompany = p.company.nameCompany;
-           // person.typeAlgo.idAlgorithm = p.FK_algorithm;
-           // person.typeAlgo.type = p.algorithm.type;
+            person.Email = p.email;
+            person.Password = p.password;
+            person.LastName = p.lastName;
+            person.FirstName = p.firstName;
+            person.KeyUsed = p.keyUsed;
+            person.KeyLength = p.keyLength;
+            int idCompany = searchCompany(p.company.nameCompany);
+            person.Company.IdCompany = idCompany;
+            person.Company.NameCompany = p.company.nameCompany;
+            person.TypeAlgo.IdAlgorithm = p.FK_algorithm;
+            person.TypeAlgo.Type = p.algorithm.type;
         }
 
         private void fillPersonToDatabase(person p, Person newPerson)
         {
-            p.email = newPerson.email;
-            p.password = newPerson.password;
-            p.lastName = newPerson.lastName;
-            p.firstName = newPerson.firstName;
-            p.keyUsed = newPerson.keyUsed;
-            p.keyLength = newPerson.keyLength;
-            p.FK_company = newPerson.company.idCompany;
-            p.FK_algorithm = newPerson.typeAlgo.idAlgorithm;
+            p.email = newPerson.Email;
+            p.password = newPerson.Password;
+            p.lastName = newPerson.LastName;
+            p.firstName = newPerson.FirstName;
+            p.keyUsed = newPerson.KeyUsed;
+            p.keyLength = newPerson.KeyLength;
+            p.FK_company = newPerson.Company.IdCompany;
+            p.FK_algorithm = newPerson.TypeAlgo.IdAlgorithm;
         }
 
         private int searchCompany(string nameCompany)
@@ -152,10 +151,10 @@ namespace KeyRegister_WebApi.Controllers
             int idCompany;
 
             try {
-                company query = (from c
-                                 in db.companies
-                                 where c.nameCompany == nameCompany
-                                 select c).Single();
+                var query = (from c
+                             in db.companies
+                             where c.nameCompany == nameCompany
+                             select c).Single();
 
                 idCompany = query.idCompany;
 
@@ -169,7 +168,7 @@ namespace KeyRegister_WebApi.Controllers
 
         private int addCompanyInDatabase(string nameCompany)
         {
-            company query = new company();
+            var query = new company();
             query.nameCompany = nameCompany;
 
             db.companies.Add(query);

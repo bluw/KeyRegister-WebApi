@@ -8,13 +8,34 @@ namespace Model_library
 {
     public class Person 
     {
-        public string lastName { get; set; }
-        public string firstName { get; set; }
-        public int keyLength { get; set; }
-        public string keyUsed { get; set; }
-        public string email { get; set; }
-        public string password { get; set; }
-        public Algorithm typeAlgo { get; set; }
-        public Company company { get; set; }
+        private string lastName;
+        public string LastName { get; set; }
+
+        private string firstName;
+        public string FirstName { get; set; }
+
+        private int keyLength;
+        public int KeyLength { get; set; }
+
+        private string keyUsed;
+        public string KeyUsed { get; set; }
+
+        private string email;
+        public string Email { get; set; }
+
+        private string password;
+        public string Password { get; set; }
+
+        private Algorithm typeAlgo;
+        public Algorithm TypeAlgo { get; set; }
+
+        private Company company;
+        public Company Company { get; set; }
+
+        public Person()
+        {
+            Company = new Company();
+            TypeAlgo = new Algorithm();
+        }
     }
 }
