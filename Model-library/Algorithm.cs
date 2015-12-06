@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace Model_library
 {
-    [Serializable]
     public class Algorithm
     {
         public int idAlgorithm { get; set; }
