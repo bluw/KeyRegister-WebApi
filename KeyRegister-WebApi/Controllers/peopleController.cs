@@ -18,44 +18,83 @@ namespace KeyRegister_WebApi.Controllers
         private KeyRegisterEntities db = new KeyRegisterEntities();
 
         [HttpPut, ActionName("updatePerson")]
-        public void updatePersonInDatabase(string email, string newPersonJSON)
+        public IHttpActionResult updatePersonInDatabase(string email, Person newPerson)
         {
-            Person newPerson = Newtonsoft.Json.JsonConvert.DeserializeObject<Person>(newPersonJSON);
-            
-            var query = (from p
-                            in db.people
-                            where p.email == email
-                            select p).Single();
+            var person = new person();
+            fillPersonGoingToDatabase(person, newPerson);
 
-            fillPersonToDatabase(query, newPerson);
+            if (email != person.email) {
+                return BadRequest();
+            }
 
-            db.SaveChanges();
+            if (!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            }
+
+            db.Entry(person).State = EntityState.Modified;
+
+            try {
+                db.SaveChanges();
+            } catch (DbUpdateConcurrencyException) {
+                if (!personExists(email)) {
+                    return NotFound();
+                } else {
+                    throw;
+                }
+            }
+
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         [HttpPost, ActionName("addPerson")]
-        public void addPersonInDatabase(string newPersonJSON)
+        public IHttpActionResult addPersonInDatabase(Person newPerson)
         {
-            Person newPerson = Newtonsoft.Json.JsonConvert.DeserializeObject<Person>(newPersonJSON);
+            try {
+                if (!ModelState.IsValid) {
+                    return BadRequest(ModelState);
+                }
 
-                            // class starting with a lower character -> come from table name in database
-            var query = new person();
-            fillPersonToDatabase(query, newPerson);
+                var person = new person();
+                fillPersonGoingToDatabase(person, newPerson);
+                db.people.Add(person);
 
-            db.people.Add(query);
-            db.SaveChanges();
+                try {
+                    db.SaveChanges();
+                } catch (DbUpdateException) {
+                    if (personExists(person.email)) {
+                        return Conflict();
+                    } else {
+                        throw;
+                    }
+                }
+
+                return CreatedAtRoute("DefaultApi", new { id = person.email }, person);
+
+            } catch (Exception ex) {
+
+                string message = "";
+                var innerEx = ex;
+                while (innerEx != null) {
+                    message = message + innerEx.Message;
+                    innerEx = innerEx.InnerException;
+                }
+
+                return BadRequest(message);
+            }
+
         }
 
         [HttpGet, ActionName("searchPersonByName")]
         public IEnumerable<Person> searchPersonByNameInDatabase(string lastName)
         {
+            var queryResult = (from p
+                               in db.people
+                               where p.lastName == lastName
+                               select p).ToList();
+
             List<Person> list = new List<Person>();
 
-            var query = (from p
-                         in db.people
-                         where p.lastName == lastName
-                         select p).ToList();
-
-            foreach (var p in query) {
+            foreach (var p in queryResult) {
                 Person person = new Person();
                 fillPerson(person, p);
                 list.Add(person);
@@ -67,14 +106,13 @@ namespace KeyRegister_WebApi.Controllers
         [HttpGet, ActionName("searchPersonByEmail")]
         public Person searchPersonByEmailInDatabase(string email)
         {
+            var queryResult = (from p
+                               in db.people
+                               where p.email == email
+                               select p).Single();
+
             Person person = new Person();
-
-            var query = (from p
-                         in db.people
-                         where p.email == email
-                         select p).Single();
-
-            fillPerson(person, query);
+            fillPerson(person, queryResult);
 
             return person;
         }
@@ -83,14 +121,15 @@ namespace KeyRegister_WebApi.Controllers
         public IEnumerable<Person> searchPersonByCompanyInDatabase(string nameCompany)
         {
             int idCompany = searchCompany(nameCompany);
+
+            var queryResult = (from p
+                               in db.people
+                               where p.FK_company == idCompany
+                               select p).ToList();
+
             List<Person> list = new List<Person>();
 
-            var query = (from p
-                         in db.people
-                         where p.FK_company == idCompany
-                         select p).ToList();
-
-            foreach (var p in query) {
+            foreach (var p in queryResult) {
                 Person person = new Person();
                 fillPerson(person, p);
                 list.Add(person);
@@ -102,21 +141,80 @@ namespace KeyRegister_WebApi.Controllers
         [HttpGet, ActionName("getFavorite")]
         public IEnumerable<Person> getFavoriteFromDatabase(string email)
         {
+            var queryResult = (from p in db.people
+                               join f in db.favorites
+                               on p.email equals f.personFavorite
+                               where f.personWithFavorite == email
+                               select p).ToList();
+
             List<Person> list = new List<Person>();
 
-            var query = (from p in db.people
-                         join f in db.favorites
-                         on p.email equals f.personFavorite
-                         where p.email == email
-                         select p).ToList();
-
-            foreach (var p in query) {
+            foreach (var p in queryResult) {
                 Person person = new Person();
                 fillPerson(person, p);
                 list.Add(person);
             }
 
             return (list.ToArray());
+        }
+
+        [HttpPost, ActionName("addFavorite")]
+        public IHttpActionResult addFavoriteInDatabase(string email, string emailFavorite)
+        {
+            if (!ModelState.IsValid) {
+                return BadRequest(ModelState);
+            }
+
+            if (favoriteLinkExists(email, emailFavorite)) {
+                return Conflict();
+            }
+
+            var favorite = new favorite();
+            favorite.personWithFavorite = email;
+            favorite.personFavorite = emailFavorite;
+
+            db.favorites.Add(favorite);
+
+            try {
+                db.SaveChanges();
+            } catch (DbUpdateException) {
+                throw;
+            }
+
+            return CreatedAtRoute("DefaultApi", new { id = favorite.personWithFavorite }, favorite);
+        }
+
+        [HttpDelete, ActionName("deleteFavorite")]
+        public IHttpActionResult DeleteFavoriteFromDatabase(string email, string emailFavorite)
+        {
+            var favorite = (from f
+                            in db.favorites
+                            where f.personWithFavorite == email
+                            && f.personFavorite == emailFavorite
+                            select f).Single();
+
+            if (favorite == null) {
+                return NotFound();
+            }
+
+            db.favorites.Remove(favorite);
+            db.SaveChanges();
+
+            return Ok(favorite);
+        }
+
+        [HttpDelete, ActionName("deleteAccount")]
+        public IHttpActionResult Deleteperson(string email)
+        {
+            person person = db.people.Find(email);
+            if (person == null) {
+                return NotFound();
+            }
+
+            db.people.Remove(person);
+            db.SaveChanges();
+
+            return Ok(person);
         }
 
         private void fillPerson(Person person, person p)
@@ -127,14 +225,13 @@ namespace KeyRegister_WebApi.Controllers
             person.FirstName = p.firstName;
             person.KeyUsed = p.keyUsed;
             person.KeyLength = p.keyLength;
-            int idCompany = searchCompany(p.company.nameCompany);
-            person.Company.IdCompany = idCompany;
+            person.Company.IdCompany = p.FK_company;
             person.Company.NameCompany = p.company.nameCompany;
             person.TypeAlgo.IdAlgorithm = p.FK_algorithm;
             person.TypeAlgo.Type = p.algorithm.type;
         }
 
-        private void fillPersonToDatabase(person p, Person newPerson)
+        private void fillPersonGoingToDatabase(person p, Person newPerson)
         {
             p.email = newPerson.Email;
             p.password = newPerson.Password;
@@ -142,8 +239,10 @@ namespace KeyRegister_WebApi.Controllers
             p.firstName = newPerson.FirstName;
             p.keyUsed = newPerson.KeyUsed;
             p.keyLength = newPerson.KeyLength;
-            p.FK_company = newPerson.Company.IdCompany;
-            p.FK_algorithm = newPerson.TypeAlgo.IdAlgorithm;
+            int idCompany = searchCompany(newPerson.Company.NameCompany);
+            p.FK_company = idCompany;
+            int idAlgo = searchAlgo(newPerson.TypeAlgo.Type);
+            p.FK_algorithm = idAlgo;
         }
 
         private int searchCompany(string nameCompany)
@@ -151,12 +250,12 @@ namespace KeyRegister_WebApi.Controllers
             int idCompany;
 
             try {
-                var query = (from c
-                             in db.companies
-                             where c.nameCompany == nameCompany
-                             select c).Single();
+                var company = (from c
+                               in db.companies
+                               where c.nameCompany == nameCompany
+                               select c).Single();
 
-                idCompany = query.idCompany;
+                idCompany = company.idCompany;
 
             } catch (Exception e) { // exception throw by .Single() if there isnt one row
                                     // that means the company doesnt exist in the DB
@@ -166,14 +265,49 @@ namespace KeyRegister_WebApi.Controllers
             return idCompany;
         }
 
+        private int searchAlgo(string type)
+        {
+            int id;
+
+            try {
+                var algo = (from a
+                            in db.algorithms
+                            where a.type == type
+                            select a).Single();
+
+                id = algo.idAlgorithm;
+
+            } catch (Exception e) {
+                throw;
+            }
+
+            return id;
+        }
+
         private int addCompanyInDatabase(string nameCompany)
         {
-            var query = new company();
-            query.nameCompany = nameCompany;
+            var company = new company();
+            company.nameCompany = nameCompany;
 
-            db.companies.Add(query);
-            db.SaveChanges();
-            return db.companies.Count(); //meh . . . 
+            db.companies.Add(company);
+
+            try {
+                db.SaveChanges();
+            } catch (DbUpdateException) {
+                throw;
+            }
+
+            return db.companies.Last().idCompany;
+        }
+
+        private bool personExists(string id)
+        {
+            return db.people.Count(e => e.email == id) > 0;
+        }
+
+        private bool favoriteLinkExists(string email, string emailFavorite)
+        {
+            return db.favorites.Count(e => e.personWithFavorite == email && e.personFavorite == emailFavorite) > 0;
         }
 
         /*
