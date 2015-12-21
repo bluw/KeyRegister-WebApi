@@ -203,20 +203,6 @@ namespace KeyRegister_WebApi.Controllers
             return Ok(favorite);
         }
 
-        [HttpDelete, ActionName("deleteAccount")]
-        public IHttpActionResult Deleteperson(string email)
-        {
-            person person = db.people.Find(email);
-            if (person == null) {
-                return NotFound();
-            }
-
-            db.people.Remove(person);
-            db.SaveChanges();
-
-            return Ok(person);
-        }
-
         private void fillPerson(Person person, person p)
         {
             person.Email = p.email;
